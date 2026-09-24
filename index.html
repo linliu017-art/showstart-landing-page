@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#080808" />
+  <meta name="description" content="秀动 App 沉浸式产品落地页概念稿——从发现喜欢，到站在人群中央。" />
+  <title>秀动 SHOWSTART — 今晚，去现场</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ff4319'/%3E%3Cpath d='M18 20h28L29 44h17' fill='none' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css" />
+  <style>
+    :root {
+      --bg: #070707;
+      --surface: #111111;
+      --surface-2: #181818;
+      --line: rgba(255, 255, 255, .13);
+      --muted: #969696;
+      --text: #f4f3ef;
+      --orange: #ff4319;
+      --purple: #7d5cff;
+      --acid: #c8ff1a;
+      --radius: 28px;
+      --page: min(1440px, calc(100vw - 48px));
+      --ease: cubic-bezier(.2, .75, .15, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color-scheme: dark; scroll-behavior: auto; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(125, 92, 255, .18), transparent 31rem),
+        var(--bg);
+      font-family: Inter, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+    }
+    button, a { color: inherit; font: inherit; }
+    button { border: 0; }
+    a { text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ::selection { color: #050505; background: var(--acid); }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: -80px;
+      z-index: 100;
+      padding: 12px 16px;
+      color: #000;
+      background: var(--acid);
+      border-radius: 12px;
+      transition: top .2s;
+    }
+    .skip-link:focus { top: 16px; }
+    .container { width: var(--page); margin-inline: auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: #bcbcbc;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+      box-shadow: 0 0 16px var(--orange);
+    }
+    .display {
+      margin: 0;
+      font-size: clamp(54px, 9.6vw, 156px);
+      font-weight: 950;
+      line-height: .82;
+      letter-spacing: -.075em;
+    }
+    .section-title {
+      max-width: 850px;
+      margin: 20px 0 0;
+      font-size: clamp(42px, 6.3vw, 96px);
+      font-weight: 900;
+      line-height: .92;
+      letter-spacing: -.06em;
+    }
+    .section-copy {
+      max-width: 540px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.3vw, 20px);
+      line-height: 1.75;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      width: 100%;
+      background: linear-gradient(#070707 0%, rgba(7, 7, 7, .72) 70%, transparent);
+    }
+    .nav-inner {
+      width: var(--page);
+      height: 88px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 950; letter-spacing: -.03em; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      background: var(--orange);
+      border-radius: 12px;
+      transform: rotate(-5deg);
+      box-shadow: 0 0 35px rgba(255, 67, 25, .28);
+    }
+    .brand-mark svg { width: 23px; }
+    .nav-links { display: flex; align-items: center; gap: 34px; font-size: 14px; font-weight: 700; }
+    .nav-links a:not(.nav-cta) { color: #aaa; transition: color .25s; }
+    .nav-links a:not(.nav-cta):hover { color: white; }
+    .nav-cta, .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 21px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform .25s var(--ease), background .25s, color .25s;
+    }
+    .nav-cta { color: #050505; background: var(--text); }
+    .nav-cta:hover, .button:hover { transform: translateY(-2px); }
+    .button.primary { color: #090909; background: var(--orange); box-shadow: 0 14px 48px rgba(255, 67, 25, .23); }
+    .button.ghost { color: white; background: rgba(255,255,255,.07); border: 1px solid var(--line); }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      padding: 140px 0 60px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .hero-light {
+      position: absolute;
+      top: -38vh;
+      left: 50%;
+      z-index: -1;
+      width: 50vw;
+      height: 105vh;
+      transform: translateX(-50%) perspective(600px) rotateX(12deg);
+      background: linear-gradient(to bottom, rgba(255, 67, 25, .21), rgba(125, 92, 255, .06) 60%, transparent);
+      filter: blur(12px);
+      clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%);
+      opacity: .8;
+    }
+    .hero-orb {
+      position: absolute;
+      left: var(--mx, 70%);
+      top: var(--my, 45%);
+      z-index: -1;
+      width: 420px;
+      height: 420px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: rgba(125, 92, 255, .15);
+      filter: blur(90px);
+      transition: left .3s ease-out, top .3s ease-out;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(360px, .8fr);
+      align-items: center;
+      gap: clamp(30px, 6vw, 100px);
+    }
+    .hero-copy { position: relative; z-index: 2; }
+    .hero-title span { display: block; }
+    .hero-title .outline {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(255,255,255,.82);
+    }
+    .hero-title .accent { color: var(--orange); }
+    .hero-sub {
+      max-width: 535px;
+      margin: 28px 0 0;
+      color: #a4a4a4;
+      font-size: clamp(17px, 1.6vw, 22px);
+      line-height: 1.65;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
+    .hero-note { display: flex; align-items: center; gap: 10px; margin-top: 28px; color: #787878; font-size: 12px; }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--acid); box-shadow: 0 0 14px var(--acid); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 50% { opacity: .35; transform: scale(.72); } }
+
+    .hero-device-wrap { position: relative; min-height: 650px; display: grid; place-items: center; }
+    .device {
+      position: relative;
+      width: min(330px, 72vw);
+      aspect-ratio: 9 / 19;
+      padding: 9px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 48px;
+      background: #050505;
+      box-shadow: 0 50px 100px rgba(0,0,0,.65), 0 0 90px rgba(255,67,25,.12), inset 0 0 0 1px #000;
+      transform: rotate(4deg);
+    }
+    .device::before {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      z-index: 5;
+      width: 86px;
+      height: 22px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: #030303;
+    }
+    .screen { height: 100%; overflow: hidden; border-radius: 39px; background: #111; }
+    .screen-hero {
+      position: relative;
+      height: 48%;
+      padding: 62px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background:
+        linear-gradient(0deg, #111 0%, transparent 67%),
+        url("https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=84") center / cover;
+    }
+    .screen-kicker { color: var(--acid); font-size: 10px; font-weight: 900; letter-spacing: .14em; }
+    .screen-hero h2 { max-width: 250px; margin: 8px 0 5px; font-size: 31px; line-height: .95; letter-spacing: -.05em; }
+    .screen-hero p { margin: 0; color: #aaa; font-size: 11px; }
+    .screen-body { padding: 16px 16px 22px; }
+    .chips { display: flex; gap: 7px; overflow: hidden; }
+    .chip { flex: none; padding: 7px 10px; border-radius: 999px; color: #888; background: #1b1b1b; font-size: 9px; font-weight: 800; }
+    .chip.active { color: #080808; background: var(--acid); }
+    .mini-list { margin-top: 15px; display: grid; gap: 9px; }
+    .mini-row { display: grid; grid-template-columns: 48px 1fr auto; align-items: center; gap: 10px; }
+    .mini-poster { width: 48px; height: 58px; border-radius: 8px; background: linear-gradient(135deg, var(--purple), var(--orange)); }
+    .mini-row:nth-child(2) .mini-poster { background: linear-gradient(135deg, #1d86ff, #e1ff3a); }
+    .mini-row:nth-child(3) .mini-poster { background: linear-gradient(135deg, #f744ba, #3615ff); }
+    .mini-row strong { display: block; font-size: 11px; }
+    .mini-row small { color: #777; font-size: 8px; }
+    .mini-row em { color: var(--orange); font-size: 9px; font-style: normal; font-weight: 900; }
+    .floating-tag {
+      position: absolute;
+      z-index: 3;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(18,18,18,.7);
+      box-shadow: 0 20px 45px rgba(0,0,0,.35);
+      backdrop-filter: blur(14px);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .tag-a { top: 16%; left: -3%; color: var(--acid); transform: rotate(-8deg); }
+    .tag-b { right: -1%; bottom: 18%; color: white; transform: rotate(6deg); }
+    .tag-b b { color: var(--orange); }
+
+    .ticker { overflow: hidden; border-block: 1px solid var(--line); background: var(--orange); color: #080808; transform: rotate(-1deg) scale(1.02); }
+    .ticker-track { width: max-content; display: flex; gap: 34px; padding: 15px 0; animation: ticker 24s linear infinite; font-size: 16px; font-weight: 950; letter-spacing: .06em; }
+    .ticker-track span::after { content: "✦"; margin-left: 34px; }
+    @keyframes ticker { to { transform: translateX(-50%); } }
+
+    .discover { padding: 160px 0 130px; overflow: hidden; }
+    .discover-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 38px; }
+    .filters { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .filter {
+      padding: 10px 15px;
+      color: #969696;
+      background: #141414;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 750;
+      transition: .2s;
+    }
+    .filter:hover, .filter.active { color: #080808; background: var(--acid); border-color: var(--acid); }
+    .event-swiper {
+      width: 100%;
+      padding: 52px 0 38px;
+      overflow: visible;
+      perspective: 1400px;
+    }
+    .event-track { display: flex; align-items: center; }
+    .event-card {
+      position: relative;
+      width: clamp(520px, 58vw, 860px);
+      aspect-ratio: 16 / 9.6;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: #151515;
+      box-shadow: 0 34px 90px rgba(0,0,0,.58);
+      opacity: .32;
+      filter: saturate(.55) brightness(.68);
+      transition-property: transform, opacity, filter, border-color !important;
+      transition-timing-function: var(--ease) !important;
+    }
+    .event-card.swiper-slide-prev,
+    .event-card.swiper-slide-next { opacity: .58; filter: saturate(.72) brightness(.78); }
+    .event-card.swiper-slide-active { opacity: 1; filter: none; border-color: rgba(255,255,255,.25); }
+    .event-card:hover { border-color: rgba(255,255,255,.38); }
+    .event-card[hidden] { display: none; }
+    .event-card img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.82) contrast(1.1); transition: transform .7s var(--ease), filter .4s; }
+    .event-card.swiper-slide-active:hover img { transform: scale(1.035); filter: saturate(1.05) contrast(1.05); }
+    .event-card::after { content: ""; position: absolute; inset: 27% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.96)); }
+    .event-meta { position: absolute; inset: auto 30px 27px; z-index: 2; }
+    .event-meta small { display: inline-flex; padding: 7px 12px; color: var(--acid); border: 1px solid rgba(200,255,26,.42); border-radius: 999px; background: rgba(5,5,5,.42); font-weight: 850; letter-spacing: .08em; }
+    .event-meta h3 { margin: 14px 0 7px; font-size: clamp(28px, 2.5vw, 42px); line-height: 1; letter-spacing: -.04em; }
+    .event-meta p { margin: 0; color: #aaa; font-size: 14px; }
+    .event-action { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .event-date { color: white; font-size: 15px; font-weight: 850; }
+    .event-date span { margin-left: 6px; color: #8a8a8a; font-weight: 500; }
+    .event-buy { min-height: 42px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center; color: #080808; background: var(--acid); border-radius: 999px; font-size: 13px; font-weight: 900; }
+    .event-no { position: absolute; top: 19px; right: 20px; z-index: 2; color: rgba(255,255,255,.78); font-size: 12px; font-weight: 900; }
+    .event-card[data-cat="talk"] img { filter: hue-rotate(250deg) saturate(.9) contrast(1.15); }
+    .event-card[data-cat="festival"] img { filter: hue-rotate(18deg) saturate(1.15) contrast(1.05); }
+    .event-controls {
+      width: var(--page);
+      margin: 2px auto 0;
+      display: grid;
+      grid-template-columns: 58px minmax(160px, 1fr) auto 58px;
+      align-items: center;
+      gap: 24px;
+    }
+    .event-arrow {
+      position: static;
+      width: 54px;
+      height: 54px;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: #101010;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: color .2s, background .2s, border-color .2s, transform .2s;
+    }
+    .event-arrow::after { display: none; }
+    .event-arrow svg { display: none; }
+    .event-arrow:hover { color: #080808; background: var(--acid); border-color: var(--acid); transform: scale(1.06); }
+    .event-pagination { position: static; width: auto !important; display: flex; align-items: center; gap: 11px; }
+    .event-pagination .swiper-pagination-bullet { width: 9px; height: 9px; margin: 0 !important; background: #666; opacity: .6; transition: width .25s var(--ease), border-radius .25s, background .25s; }
+    .event-pagination .swiper-pagination-bullet-active { width: 34px; border-radius: 999px; background: var(--acid); opacity: 1; }
+    .event-hint { color: #6f6f6f; font-size: 12px; letter-spacing: .04em; white-space: nowrap; }
+    .event-hint b { color: #aaa; font-weight: 800; }
+    html:not(.swiper-ready) .event-swiper { overflow-x: auto; }
+    html:not(.swiper-ready) .event-card { flex: 0 0 min(820px, 75vw); opacity: 1; filter: none; }
+
+    .product { padding: 160px 0; background: #0a0a0a; }
+    .product-grid { min-height: 420vh; display: grid; grid-template-columns: 1fr 1fr; gap: 7vw; align-items: start; }
+    .product-device-col { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; }
+    .product-device {
+      width: min(340px, 78vw);
+      transform: rotate(-3deg);
+    }
+    .product-screen { position: relative; height: 100%; overflow: hidden; border-radius: 39px; background: #101010; }
+    .app-view { position: absolute; inset: 0; padding: 70px 20px 24px; opacity: 0; transform: translateY(34px) scale(.97); pointer-events: none; }
+    .app-view.active { opacity: 1; transform: none; }
+    .app-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 23px; }
+    .app-top strong { font-size: 22px; }
+    .app-top span { color: #777; font-size: 11px; }
+    .app-hero-card { min-height: 215px; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; border-radius: 22px; background: linear-gradient(145deg, rgba(125,92,255,.3), rgba(255,67,25,.8)), url("https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=84") center / cover; }
+    .app-hero-card b { font-size: 26px; line-height: 1; }
+    .app-hero-card small { margin-top: 8px; color: rgba(255,255,255,.72); }
+    .app-bars { display: grid; gap: 10px; margin-top: 16px; }
+    .app-bar { height: 48px; border-radius: 14px; background: #1c1c1c; }
+    .app-map { position: relative; height: 380px; overflow: hidden; border-radius: 24px; background: radial-gradient(circle at 55% 40%, rgba(125,92,255,.42), transparent 8%), repeating-linear-gradient(35deg, transparent 0 22px, rgba(255,255,255,.035) 23px 24px), #181818; }
+    .app-map i { position: absolute; width: 10px; height: 10px; border: 2px solid #090909; border-radius: 50%; background: var(--orange); box-shadow: 0 0 18px var(--orange); }
+    .app-map i:nth-child(1) { left: 28%; top: 34%; } .app-map i:nth-child(2) { left: 62%; top: 22%; } .app-map i:nth-child(3) { left: 72%; top: 66%; } .app-map i:nth-child(4) { left: 38%; top: 74%; }
+    .detail-poster { height: 270px; border-radius: 22px; background: linear-gradient(0deg, #171717, transparent), url("https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=700&q=84") center / cover; }
+    .detail-title { margin: 18px 0 7px; font-size: 25px; line-height: 1.1; }
+    .detail-copy { color: #888; font-size: 11px; }
+    .buy-button { margin-top: 20px; width: 100%; min-height: 48px; color: #050505; background: var(--orange); border-radius: 14px; font-size: 12px; font-weight: 900; }
+    .ticket { position: relative; margin-top: 65px; padding: 28px 22px; color: #0a0a0a; background: #f3f1e8; border-radius: 22px; transform: rotate(-2deg); }
+    .ticket::after { content: ""; position: absolute; left: 0; right: 0; top: 72%; border-top: 2px dashed #aaa; }
+    .ticket-kicker { font-size: 9px; font-weight: 900; letter-spacing: .12em; }
+    .ticket h4 { margin: 14px 0 5px; font-size: 28px; line-height: 1; }
+    .ticket p { margin: 0 0 55px; color: #555; font-size: 10px; }
+    .barcode { height: 45px; margin-top: 18px; opacity: .76; background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 5px, #111 5px 9px, transparent 9px 11px); }
+    .product-copy-col { padding-top: 10vh; }
+    .product-intro { margin-bottom: 25vh; }
+    .story-step { min-height: 86vh; display: flex; flex-direction: column; justify-content: center; border-top: 1px solid var(--line); opacity: .35; transition: opacity .35s; }
+    .story-step.active { opacity: 1; }
+    .story-index { color: var(--orange); font-size: 13px; font-weight: 900; letter-spacing: .12em; }
+    .story-step h3 { margin: 20px 0 17px; font-size: clamp(36px, 4.3vw, 68px); line-height: .95; letter-spacing: -.055em; }
+    .story-step p { max-width: 480px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.72; }
+    .story-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .story-tags span { padding: 8px 11px; color: #bbb; border: 1px solid var(--line); border-radius: 999px; font-size: 11px; }
+
+    .journey { padding: 150px 0; overflow: hidden; }
+    .journey-head { display: flex; justify-content: space-between; gap: 50px; align-items: end; margin-bottom: 70px; }
+    .journey-path { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .journey-line { position: absolute; left: 7%; right: 7%; top: 34px; height: 2px; background: #252525; }
+    .journey-progress { width: 0%; height: 100%; background: var(--orange); box-shadow: 0 0 18px var(--orange); }
+    .journey-step { position: relative; padding-top: 80px; }
+    .journey-dot { position: absolute; top: 23px; left: 24px; width: 22px; height: 22px; border: 5px solid var(--bg); border-radius: 50%; background: #333; transition: background .3s, box-shadow .3s; }
+    .journey-step.active .journey-dot { background: var(--orange); box-shadow: 0 0 24px var(--orange); }
+    .journey-card { min-height: 250px; padding: 27px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(255,255,255,.015)); }
+    .journey-card small { color: #777; font-weight: 900; }
+    .journey-card h3 { margin: 35px 0 14px; font-size: 26px; }
+    .journey-card p { margin: 0; color: #888; font-size: 14px; line-height: 1.65; }
+    .journey-icon { margin-top: 28px; color: var(--acid); font-size: 25px; }
+
+    .cities { padding: 150px 0; background: #0c0c0c; }
+    .cities-layout { margin-top: 65px; display: grid; grid-template-columns: .75fr 1.25fr; gap: 42px; }
+    .city-list { display: grid; align-content: center; gap: 4px; }
+    .city-button {
+      width: 100%;
+      padding: 17px 0;
+      display: flex;
+      justify-content: space-between;
+      color: #555;
+      background: transparent;
+      border-bottom: 1px solid #222;
+      text-align: left;
+      cursor: pointer;
+      font-size: clamp(28px, 4vw, 58px);
+      font-weight: 900;
+      letter-spacing: -.05em;
+      transition: color .25s, padding .25s;
+    }
+    .city-button:hover, .city-button.active { padding-left: 12px; color: var(--text); }
+    .city-button span { align-self: center; color: var(--orange); font-size: 12px; letter-spacing: .05em; }
+    .map {
+      position: relative;
+      min-height: 660px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 60% 35%, rgba(125,92,255,.25), transparent 5%),
+        repeating-linear-gradient(25deg, transparent 0 45px, rgba(255,255,255,.027) 46px 47px),
+        repeating-linear-gradient(115deg, transparent 0 53px, rgba(255,255,255,.025) 54px 55px),
+        #111;
+    }
+    .map::before, .map::after { content: ""; position: absolute; inset: 13%; border: 1px solid rgba(255,255,255,.05); border-radius: 50%; transform: rotate(25deg); }
+    .map::after { inset: 27%; transform: rotate(-25deg); }
+    .map-node { position: absolute; z-index: 2; width: 15px; height: 15px; border: 3px solid #080808; border-radius: 50%; background: var(--purple); box-shadow: 0 0 25px var(--purple); }
+    .map-node::after { content: attr(data-label); position: absolute; left: 19px; top: -4px; color: #aaa; white-space: nowrap; font-size: 11px; font-weight: 800; }
+    .map-node.active { background: var(--orange); box-shadow: 0 0 30px var(--orange); transform: scale(1.35); }
+    .node-1 { left: 48%; top: 30%; } .node-2 { left: 66%; top: 48%; } .node-3 { left: 40%; top: 60%; } .node-4 { left: 76%; top: 70%; } .node-5 { left: 27%; top: 40%; }
+    .city-panel { position: absolute; left: 28px; right: 28px; bottom: 28px; z-index: 3; padding: 24px; display: flex; align-items: end; justify-content: space-between; gap: 20px; border: 1px solid var(--line); border-radius: 22px; background: rgba(9,9,9,.75); backdrop-filter: blur(16px); }
+    .city-panel small { color: var(--orange); font-weight: 900; }
+    .city-panel h3 { margin: 8px 0 0; font-size: 28px; }
+    .city-panel p { max-width: 300px; margin: 0; color: #888; font-size: 13px; line-height: 1.6; text-align: right; }
+
+    .community { padding: 155px 0; }
+    .community-grid { margin-top: 58px; display: grid; grid-template-columns: 1.1fr .9fr .9fr; grid-template-rows: 260px 260px; gap: 15px; }
+    .community-card { position: relative; overflow: hidden; border-radius: 24px; background: #171717; }
+    .community-card:first-child { grid-row: 1 / 3; }
+    .community-card:nth-child(4) { grid-column: 2 / 4; }
+    .community-card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(.25) contrast(1.08); transition: transform .7s var(--ease), filter .4s; }
+    .community-card:hover img { transform: scale(1.04); filter: grayscale(0) contrast(1.02); }
+    .community-card::after { content: ""; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.86)); }
+    .community-label { position: absolute; left: 20px; right: 20px; bottom: 18px; z-index: 2; display: flex; justify-content: space-between; align-items: end; }
+    .community-label b { font-size: 18px; }
+    .community-label span { color: var(--acid); font-size: 11px; font-weight: 900; }
+
+    .final { position: relative; min-height: 95vh; padding: 120px 0; display: grid; place-items: center; overflow: hidden; text-align: center; }
+    .final::before { content: ""; position: absolute; top: -35%; width: 65vw; height: 120%; background: linear-gradient(rgba(255,67,25,.16), transparent); clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); filter: blur(20px); }
+    .final-content { position: relative; z-index: 2; }
+    .final-title { max-width: 1100px; margin-inline: auto; }
+    .final-title span { color: var(--orange); }
+    .final p { margin: 28px auto 36px; color: #929292; font-size: 18px; }
+    .download-block { display: flex; justify-content: center; align-items: center; gap: 18px; }
+    .qr {
+      width: 106px;
+      height: 106px;
+      padding: 9px;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 2px;
+      border-radius: 17px;
+      background: white;
+    }
+    .qr i { background: #111; opacity: 0; }
+    .qr i:nth-child(3n), .qr i:nth-child(5n + 1), .qr i:nth-child(7n + 2) { opacity: 1; }
+    .download-buttons { display: grid; gap: 9px; }
+    .store-button { min-width: 180px; min-height: 49px; color: white; background: #171717; border: 1px solid var(--line); border-radius: 14px; cursor: pointer; font-size: 13px; font-weight: 850; }
+    .footer { width: var(--page); margin: 80px auto 0; padding-top: 22px; display: flex; justify-content: space-between; border-top: 1px solid var(--line); color: #555; font-size: 11px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      z-index: 100;
+      padding: 13px 18px;
+      color: #090909;
+      background: var(--acid);
+      border-radius: 999px;
+      box-shadow: 0 16px 50px rgba(0,0,0,.55);
+      transform: translate(-50%, 30px);
+      opacity: 0;
+      pointer-events: none;
+      font-size: 13px;
+      font-weight: 900;
+      transition: .3s var(--ease);
+    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .reveal { opacity: 0; transform: translateY(28px); }
+
+    @media (max-width: 900px) {
+      :root { --page: calc(100vw - 32px); --radius: 22px; }
+      .nav-inner { height: 72px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding-top: 110px; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-device-wrap { min-height: 590px; }
+      .tag-a { left: 5%; } .tag-b { right: 3%; }
+      .discover { padding-top: 110px; }
+      .discover-head, .journey-head { align-items: start; flex-direction: column; }
+      .filters { justify-content: flex-start; }
+      .event-swiper { padding: 36px 0 28px; }
+      .event-card { width: min(78vw, 630px); }
+      .event-controls { grid-template-columns: 50px 1fr 50px; gap: 15px; }
+      .event-arrow { width: 48px; height: 48px; }
+      .event-hint { display: none; }
+      .product { padding: 110px 0; }
+      .product-grid { min-height: unset; grid-template-columns: 1fr; }
+      .product-device-col { position: sticky; top: 72px; z-index: 3; height: 58vh; pointer-events: none; }
+      .product-device { width: 190px; }
+      .product-copy-col { padding-top: 0; }
+      .product-intro { margin: 0 0 40px; }
+      .story-step { min-height: 72vh; padding: 60vh 0 30px; opacity: .55; }
+      .journey { padding: 110px 0; }
+      .journey-path { grid-template-columns: 1fr 1fr; }
+      .journey-line { display: none; }
+      .journey-step { padding-top: 48px; }
+      .journey-dot { top: 13px; left: 10px; }
+      .cities { padding: 110px 0; }
+      .cities-layout { grid-template-columns: 1fr; }
+      .city-list { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .city-button { padding: 13px; border: 1px solid var(--line); border-radius: 14px; font-size: 25px; }
+      .city-button:hover, .city-button.active { padding-left: 13px; }
+      .map { min-height: 540px; }
+      .community { padding: 110px 0; }
+      .community-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 360px 220px 240px; }
+      .community-card:first-child { grid-row: 1; grid-column: 1 / 3; }
+      .community-card:nth-child(4) { grid-column: 1 / 3; }
+    }
+
+    @media (max-width: 600px) {
+      .display { font-size: clamp(54px, 18vw, 82px); }
+      .hero-sub { font-size: 16px; }
+      .hero-actions .button { flex: 1; }
+      .hero-device-wrap { min-height: 540px; }
+      .device { width: 260px; border-radius: 40px; }
+      .screen { border-radius: 32px; }
+      .floating-tag { font-size: 10px; }
+      .event-card { width: 86vw; aspect-ratio: 4 / 3.5; border-radius: 22px; }
+      .event-meta { inset: auto 20px 18px; }
+      .event-meta small { padding: 5px 9px; font-size: 9px; }
+      .event-meta h3 { margin: 10px 0 5px; font-size: 25px; }
+      .event-meta p { font-size: 11px; }
+      .event-action { margin-top: 14px; }
+      .event-date { font-size: 12px; }
+      .event-buy { min-height: 36px; padding: 0 13px; font-size: 11px; }
+      .event-controls { grid-template-columns: 44px 1fr 44px; gap: 10px; }
+      .event-arrow { width: 42px; height: 42px; }
+      .journey-path { grid-template-columns: 1fr; }
+      .journey-card { min-height: 210px; }
+      .city-list { grid-template-columns: 1fr 1fr; }
+      .city-button span { display: none; }
+      .map { min-height: 450px; }
+      .city-panel { left: 16px; right: 16px; bottom: 16px; flex-direction: column; align-items: start; }
+      .city-panel p { text-align: left; }
+      .community-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 280px); }
+      .community-card:first-child, .community-card:nth-child(4) { grid-column: 1; grid-row: auto; }
+      .download-block { flex-direction: column; }
+      .footer { gap: 20px; flex-direction: column; text-align: left; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
+      .reveal { opacity: 1; transform: none; }
+      .event-card { transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="nav" aria-label="主导航">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="秀动首页">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none"><path d="M9 10h23L16 30h16" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>秀动 SHOWSTART</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#discover">发现演出</a>
+        <a href="#product">产品功能</a>
+        <a href="#cities">城市现场</a>
+        <button class="nav-cta download-trigger">下载 App ↗</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-light" aria-hidden="true"></div>
+      <div class="hero-orb" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Enter the live · 进入现场</span>
+          <h1 class="display hero-title" aria-label="今晚，去现场">
+            <span>今晚，</span>
+            <span class="outline">去<span class="accent">现场</span></span>
+          </h1>
+          <p class="hero-sub">从发现喜欢，到站在人群中央。找演出、买门票、管理电子票——现场体验，从秀动开始。</p>
+          <div class="hero-actions">
+            <button class="button primary download-trigger">立即下载 <span>↗</span></button>
+            <a class="button ghost" href="#product">探索产品 <span>↓</span></a>
+          </div>
+          <div class="hero-note"><i class="pulse"></i> 演出正在发生 · 向下进入现场</div>
+        </div>
+
+        <div class="hero-device-wrap" aria-label="秀动 App 界面概念展示">
+          <div class="floating-tag tag-a">LIVE / 附近正在发生</div>
+          <div class="device hero-device">
+            <div class="screen">
+              <div class="screen-hero">
+                <span class="screen-kicker">TONIGHT'S PICK</span>
+                <h2>把今晚交给现场</h2>
+                <p>在你附近 · 21 场演出</p>
+              </div>
+              <div class="screen-body">
+                <div class="chips"><span class="chip active">推荐</span><span class="chip">Livehouse</span><span class="chip">音乐节</span><span class="chip">脱口秀</span></div>
+                <div class="mini-list">
+                  <div class="mini-row"><i class="mini-poster"></i><div><strong>午夜浪潮</strong><small>今晚 20:30 · 成都</small></div><em>¥180</em></div>
+                  <div class="mini-row"><i class="mini-poster"></i><div><strong>新声实验室</strong><small>周六 19:30 · 上海</small></div><em>¥220</em></div>
+                  <div class="mini-row"><i class="mini-poster"></i><div><strong>城市漫游</strong><small>周日 20:00 · 北京</small></div><em>¥160</em></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="floating-tag tag-b"><b>03</b> / 已加入想看</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>发现演出</span><span>GET YOUR TICKET</span><span>奔赴现场</span><span>MEET AT THE LIVE</span><span>发现演出</span><span>GET YOUR TICKET</span><span>奔赴现场</span><span>MEET AT THE LIVE</span>
+      </div>
+    </div>
+
+    <section class="discover" id="discover">
+      <div class="container discover-head reveal">
+        <div><span class="eyebrow">01 · Discover</span><h2 class="section-title">下一场心动，<br>就在附近。</h2></div>
+        <div class="filters" aria-label="演出分类筛选">
+          <button class="filter active" data-filter="all">全部</button>
+          <button class="filter" data-filter="live">Livehouse</button>
+          <button class="filter" data-filter="festival">音乐节</button>
+          <button class="filter" data-filter="talk">脱口秀</button>
+        </div>
+      </div>
+      <div class="swiper event-swiper" aria-label="精选演出轮播">
+          <div class="swiper-wrapper event-track">
+            <article class="swiper-slide event-card" data-cat="live">
+              <span class="event-no">01 / 06</span>
+              <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=1000&q=84" alt="舞台上的乐队演出" />
+              <div class="event-meta"><small>LIVEHOUSE · 成都</small><h3>午夜浪潮</h3><p>MAO Livehouse · 节奏与失真之夜</p><div class="event-action"><div class="event-date">10.16 <span>周五</span></div><span class="event-buy">查看演出</span></div></div>
+            </article>
+            <article class="swiper-slide event-card" data-cat="festival">
+              <span class="event-no">02 / 06</span>
+              <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1000&q=84" alt="音乐节现场人群" />
+              <div class="event-meta"><small>FESTIVAL · 上海</small><h3>明日旷野 · 音乐节</h3><p>森林音乐公园 · 双日通票</p><div class="event-action"><div class="event-date">10.24 <span>周六</span></div><span class="event-buy">查看演出</span></div></div>
+            </article>
+            <article class="swiper-slide event-card" data-cat="live">
+              <span class="event-no">03 / 06</span>
+              <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1000&q=84" alt="歌手在灯光下演唱" />
+              <div class="event-meta"><small>TOUR · 北京</small><h3>城市漫游 · 巡演</h3><p>福浪 Livehouse · 北京站</p><div class="event-action"><div class="event-date">10.25 <span>周日</span></div><span class="event-buy">查看演出</span></div></div>
+            </article>
+            <article class="swiper-slide event-card" data-cat="talk">
+              <span class="event-no">04 / 06</span>
+              <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=84" alt="剧场内面向观众的舞台" />
+              <div class="event-meta"><small>COMEDY · 杭州</small><h3>今晚好笑 · 专场</h3><p>运河剧场 · 即兴喜剧现场</p><div class="event-action"><div class="event-date">10.28 <span>周三</span></div><span class="event-buy">查看演出</span></div></div>
+            </article>
+            <article class="swiper-slide event-card" data-cat="festival">
+              <span class="event-no">05 / 06</span>
+              <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=1000&q=84" alt="大型音乐节舞台" />
+              <div class="event-meta"><small>FESTIVAL · 武汉</small><h3>江岸声场 · 音乐节</h3><p>江滩音乐公园 · 全阵容集结</p><div class="event-action"><div class="event-date">11.01 <span>周六</span></div><span class="event-buy">查看演出</span></div></div>
+            </article>
+            <article class="swiper-slide event-card" data-cat="live">
+              <span class="event-no">06 / 06</span>
+              <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1000&q=84" alt="紫色灯光下的现场演出" />
+              <div class="event-meta"><small>LIVEHOUSE · 广州</small><h3>南方失眠 · 专场</h3><p>声音共和 · 广州限定场</p><div class="event-action"><div class="event-date">11.02 <span>周日</span></div><span class="event-buy">查看演出</span></div></div>
+            </article>
+          </div>
+      </div>
+      <div class="event-controls" aria-label="轮播控制">
+        <button class="event-arrow event-prev swiper-button-prev" aria-label="上一场演出">←</button>
+        <div class="event-pagination swiper-pagination" aria-label="轮播页码"></div>
+        <div class="event-hint"><b>左右拖拽 / 滚轮 / 点击箭头</b>切换 · 居中卡片自动放大</div>
+        <button class="event-arrow event-next swiper-button-next" aria-label="下一场演出">→</button>
+      </div>
+    </section>
+
+    <section class="product" id="product">
+      <div class="container product-grid">
+        <div class="product-device-col">
+          <div class="device product-device">
+            <div class="product-screen">
+              <div class="app-view active" data-view="0">
+                <div class="app-top"><strong>发现</strong><span>成都⌄</span></div>
+                <div class="app-hero-card"><b>为你推荐<br>今晚的声音</b><small>基于你的关注与想看</small></div>
+                <div class="app-bars"><div class="app-bar"></div><div class="app-bar"></div><div class="app-bar"></div></div>
+              </div>
+              <div class="app-view" data-view="1">
+                <div class="app-top"><strong>演出地图</strong><span>附近 12 场</span></div>
+                <div class="app-map"><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="app-view" data-view="2">
+                <div class="app-top"><strong>演出详情</strong><span>分享 ↗</span></div>
+                <div class="detail-poster"></div>
+                <h4 class="detail-title">新声实验室<br>2026 巡演</h4>
+                <div class="detail-copy">周六 20:00 · 东郊记忆 · 阵容与购票须知</div>
+                <button class="buy-button">选择票档</button>
+              </div>
+              <div class="app-view" data-view="3">
+                <div class="app-top"><strong>我的票夹</strong><span>全部订单</span></div>
+                <div class="ticket"><span class="ticket-kicker">SHOWSTART E-TICKET</span><h4>午夜浪潮</h4><p>2026.10.16 · 20:30<br>成都 MAO Livehouse</p><div class="barcode"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-copy-col">
+          <div class="product-intro reveal"><span class="eyebrow">02 · In your pocket</span><h2 class="section-title">从喜欢，<br>一路到现场。</h2></div>
+          <article class="story-step active" data-step="0"><span class="story-index">01 / 发现喜欢</span><h3>懂你的<br>演出首页</h3><p>根据城市、类型、关注艺人与想看偏好，快速找到真正想去的演出，不再错过开票。</p><div class="story-tags"><span>个性推荐</span><span>关注艺人</span><span>开票提醒</span></div></article>
+          <article class="story-step" data-step="1"><span class="story-index">02 / 找到附近</span><h3>打开城市，<br>看见现场</h3><p>按距离、日期和场馆探索城市演出，把“今晚去哪”变成一个具体答案。</p><div class="story-tags"><span>城市切换</span><span>日期筛选</span><span>场馆地图</span></div></article>
+          <article class="story-step" data-step="2"><span class="story-index">03 / 安心购票</span><h3>信息清楚，<br>购票顺畅</h3><p>阵容、票档、场次和须知集中呈现，从了解演出到确认订单，一条路径完成。</p><div class="story-tags"><span>演出详情</span><span>场次票档</span><span>订单支付</span></div></article>
+          <article class="story-step" data-step="3"><span class="story-index">04 / 进入现场</span><h3>电子票夹，<br>一站管理</h3><p>订单、票券与入场信息随时可查。到达场馆，打开秀动，准备见面。</p><div class="story-tags"><span>电子票</span><span>入场提醒</span><span>订单管理</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="journey" aria-labelledby="journey-title">
+      <div class="container">
+        <div class="journey-head reveal"><div><span class="eyebrow">03 · Ticket journey</span><h2 class="section-title" id="journey-title">四步，<br>到达热爱。</h2></div><p class="section-copy">把购票流程设计得足够直接，把期待留给真正的现场。</p></div>
+        <div class="journey-path">
+          <div class="journey-line" aria-hidden="true"><div class="journey-progress"></div></div>
+          <article class="journey-step"><i class="journey-dot"></i><div class="journey-card"><small>STEP 01</small><h3>选择场次</h3><p>按城市和日期，确认最适合你的那一站。</p><div class="journey-icon">⌖</div></div></article>
+          <article class="journey-step"><i class="journey-dot"></i><div class="journey-card"><small>STEP 02</small><h3>选择票档</h3><p>票种、价格与权益一目了然。</p><div class="journey-icon">◎</div></div></article>
+          <article class="journey-step"><i class="journey-dot"></i><div class="journey-card"><small>STEP 03</small><h3>确认订单</h3><p>核对观演人与订单信息，安全支付。</p><div class="journey-icon">✓</div></div></article>
+          <article class="journey-step"><i class="journey-dot"></i><div class="journey-card"><small>STEP 04</small><h3>获得电子票</h3><p>收进票夹，等待那一天真正到来。</p><div class="journey-icon">▥</div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cities" id="cities">
+      <div class="container">
+        <span class="eyebrow reveal">04 · City pulse</span>
+        <h2 class="section-title reveal">每座城市，<br>都有自己的声浪。</h2>
+        <div class="cities-layout">
+          <div class="city-list" aria-label="选择城市">
+            <button class="city-button active" data-city="成都" data-desc="巷子与舞台之间，今晚的声音正在发酵。">成都 <span>CHENGDU</span></button>
+            <button class="city-button" data-city="上海" data-desc="从小型空间到大型场地，演出构成城市夜晚。">上海 <span>SHANGHAI</span></button>
+            <button class="city-button" data-city="北京" data-desc="不同风格在这里相遇，新的现场每天发生。">北京 <span>BEIJING</span></button>
+            <button class="city-button" data-city="广州" data-desc="南方的温度、节奏与舞台，在夜里汇合。">广州 <span>GUANGZHOU</span></button>
+            <button class="city-button" data-city="武汉" data-desc="沿着江岸，寻找属于这座城市的现场。">武汉 <span>WUHAN</span></button>
+          </div>
+          <div class="map" role="img" aria-label="城市演出网络概念地图">
+            <i class="map-node node-1 active" data-label="成都"></i><i class="map-node node-2" data-label="上海"></i><i class="map-node node-3" data-label="北京"></i><i class="map-node node-4" data-label="广州"></i><i class="map-node node-5" data-label="武汉"></i>
+            <div class="city-panel"><div><small>NOW PLAYING</small><h3 id="city-name">成都 · 今晚</h3></div><p id="city-desc">巷子与舞台之间，今晚的声音正在发酵。</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="community" aria-labelledby="community-title">
+      <div class="container">
+        <span class="eyebrow reveal">05 · After the encore</span>
+        <h2 class="section-title reveal" id="community-title">散场以后，<br>热爱还在继续。</h2>
+        <div class="community-grid reveal">
+          <article class="community-card"><img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?auto=format&fit=crop&w=1200&q=84" alt="音乐节现场舞台与观众" /><div class="community-label"><b>现场回顾</b><span>LIVE MOMENTS</span></div></article>
+          <article class="community-card"><img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=84" alt="灯光中的演出现场" /><div class="community-label"><b>关注艺人</b><span>FOLLOW</span></div></article>
+          <article class="community-card"><img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=84" alt="音乐节人群举起双手" /><div class="community-label"><b>同好动态</b><span>COMMUNITY</span></div></article>
+          <article class="community-card"><img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=84" alt="大型音乐活动的彩色舞台" /><div class="community-label"><b>下一场见</b><span>SEE YOU LIVE</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="download">
+      <div class="container final-content">
+        <span class="eyebrow">Ready for the live?</span>
+        <h2 class="display final-title">下一场，<br><span>现场见。</span></h2>
+        <p>打开秀动，发现属于你的下一场演出。</p>
+        <div class="download-block">
+          <div class="qr" aria-label="下载二维码占位符"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="download-buttons"><button class="store-button download-trigger"> App Store 下载</button><button class="store-button download-trigger">Android 应用市场</button></div>
+        </div>
+        <footer class="footer"><span>SHOWSTART · 秀动产品落地页概念稿</span><span>示例演出与数据仅用于视觉展示</span><span>© 2026</span></footer>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" role="status" aria-live="polite">演示版：请接入真实下载地址与二维码</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+  <script>
+    (() => {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+      const hasSwiper = typeof window.Swiper !== 'undefined';
+
+      // Native browser scrolling only.
+      const hero = document.querySelector('.hero');
+      hero.addEventListener('pointermove', (event) => {
+        const rect = hero.getBoundingClientRect();
+        hero.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+        hero.style.setProperty('--my', `${event.clientY - rect.top}px`);
+      });
+
+      const toast = document.querySelector('.toast');
+      let toastTimer;
+      document.querySelectorAll('.download-trigger').forEach((button) => {
+        button.addEventListener('click', () => {
+          clearTimeout(toastTimer);
+          toast.classList.add('show');
+          toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+        });
+      });
+
+      let eventSwiper = null;
+      if (hasSwiper) {
+        eventSwiper = new Swiper('.event-swiper', {
+          effect: reducedMotion ? 'slide' : 'coverflow',
+          centeredSlides: true,
+          centerInsufficientSlides: true,
+          slidesPerView: 'auto',
+          initialSlide: 1,
+          speed: reducedMotion ? 0 : 850,
+          grabCursor: true,
+          rewind: true,
+          watchSlidesProgress: true,
+          observer: true,
+          observeParents: true,
+          keyboard: { enabled: true },
+          coverflowEffect: {
+            rotate: 7,
+            stretch: 52,
+            depth: 190,
+            modifier: 1.05,
+            scale: .78,
+            slideShadows: false
+          },
+          autoplay: reducedMotion ? false : {
+            delay: 3600,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true
+          },
+          mousewheel: {
+            forceToAxis: false,
+            releaseOnEdges: true,
+            sensitivity: .75,
+            thresholdDelta: 24,
+            thresholdTime: 450
+          },
+          navigation: {
+            nextEl: '.event-next',
+            prevEl: '.event-prev'
+          },
+          pagination: {
+            el: '.event-pagination',
+            clickable: true
+          },
+          a11y: {
+            prevSlideMessage: '上一场演出',
+            nextSlideMessage: '下一场演出',
+            paginationBulletMessage: '前往第 {{index}} 场演出'
+          },
+          on: {
+            init: () => document.documentElement.classList.add('swiper-ready')
+          }
+        });
+      }
+
+      const filters = document.querySelectorAll('.filter');
+      const cards = document.querySelectorAll('.event-card');
+      filters.forEach((filter) => {
+        filter.addEventListener('click', () => {
+          filters.forEach((item) => item.classList.remove('active'));
+          filter.classList.add('active');
+          const value = filter.dataset.filter;
+          cards.forEach((card) => { card.hidden = value !== 'all' && card.dataset.cat !== value; });
+          if (eventSwiper) {
+            requestAnimationFrame(() => {
+              eventSwiper.update();
+              const firstVisible = [...eventSwiper.slides].findIndex((slide) => !slide.hidden);
+              eventSwiper.slideTo(Math.max(0, firstVisible), 450);
+              eventSwiper.pagination.render();
+              eventSwiper.pagination.update();
+              if (eventSwiper.autoplay && !reducedMotion) eventSwiper.autoplay.start();
+            });
+          }
+          if (hasGSAP) ScrollTrigger.refresh();
+        });
+      });
+
+      const cityButtons = [...document.querySelectorAll('.city-button')];
+      const mapNodes = [...document.querySelectorAll('.map-node')];
+      cityButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+          cityButtons.forEach((item) => item.classList.remove('active'));
+          mapNodes.forEach((item) => item.classList.remove('active'));
+          button.classList.add('active');
+          mapNodes[index].classList.add('active');
+          document.querySelector('#city-name').textContent = `${button.dataset.city} · 今晚`;
+          document.querySelector('#city-desc').textContent = button.dataset.desc;
+        });
+      });
+
+      if (!hasGSAP || reducedMotion) {
+        document.querySelectorAll('.reveal').forEach((item) => { item.style.opacity = 1; item.style.transform = 'none'; });
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.from('.hero-copy > *', { opacity: 0, y: 34, duration: 1, stagger: .12, ease: 'power3.out', delay: .2 });
+      gsap.from('.hero-device', { opacity: 0, y: 70, rotate: 12, scale: .9, duration: 1.25, ease: 'power3.out', delay: .25 });
+      gsap.from('.floating-tag', { opacity: 0, scale: .8, duration: .8, stagger: .16, ease: 'back.out(1.7)', delay: 1 });
+      gsap.to('.hero-device', { yPercent: 14, rotate: -2, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: .8 } });
+      gsap.to('.hero-light', { opacity: .2, scale: 1.15, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+      gsap.utils.toArray('.reveal').forEach((item) => {
+        gsap.to(item, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: item, start: 'top 84%', once: true } });
+      });
+
+      const appViews = [...document.querySelectorAll('.app-view')];
+      const storySteps = [...document.querySelectorAll('.story-step')];
+      let activeView = 0;
+      const activateView = (index) => {
+        if (index === activeView && appViews[index].classList.contains('active')) return;
+        activeView = index;
+        storySteps.forEach((step, i) => step.classList.toggle('active', i === index));
+        appViews.forEach((view, i) => {
+          view.classList.toggle('active', i === index);
+          if (i === index) gsap.fromTo(view, { opacity: 0, y: 34, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .55, ease: 'power3.out' });
+          else gsap.to(view, { opacity: 0, y: -22, duration: .25, overwrite: true });
+        });
+      };
+      storySteps.forEach((step, index) => {
+        ScrollTrigger.create({ trigger: step, start: 'top 52%', end: 'bottom 48%', onEnter: () => activateView(index), onEnterBack: () => activateView(index) });
+      });
+
+      const journeySteps = [...document.querySelectorAll('.journey-step')];
+      gsap.to('.journey-progress', {
+        width: '100%', ease: 'none',
+        scrollTrigger: {
+          trigger: '.journey-path', start: 'top 72%', end: 'bottom 55%', scrub: .5,
+          onUpdate: ({ progress }) => journeySteps.forEach((step, index) => step.classList.toggle('active', progress >= index / (journeySteps.length - 1) - .03))
+        }
+      });
+
+      gsap.from('.community-card', { opacity: 0, y: 45, scale: .97, duration: .8, stagger: .1, ease: 'power3.out', scrollTrigger: { trigger: '.community-grid', start: 'top 78%', once: true } });
+      gsap.from('.final-content > *', { opacity: 0, y: 40, duration: 1, stagger: .12, ease: 'power3.out', scrollTrigger: { trigger: '.final', start: 'top 65%', once: true } });
+    })();
+  </script>
+</body>
+</html>
