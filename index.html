@@ -393,9 +393,16 @@
     .app-hero-card small { margin-top: 8px; color: rgba(255,255,255,.72); }
     .app-bars { display: grid; gap: 10px; margin-top: 16px; }
     .app-bar { height: 48px; border-radius: 14px; background: #1c1c1c; }
-    .app-map { position: relative; height: 380px; overflow: hidden; border-radius: 24px; background: radial-gradient(circle at 55% 40%, rgba(125,92,255,.42), transparent 8%), repeating-linear-gradient(35deg, transparent 0 22px, rgba(255,255,255,.035) 23px 24px), #181818; }
-    .app-map i { position: absolute; width: 10px; height: 10px; border: 2px solid #090909; border-radius: 50%; background: var(--orange); box-shadow: 0 0 18px var(--orange); }
-    .app-map i:nth-child(1) { left: 28%; top: 34%; } .app-map i:nth-child(2) { left: 62%; top: 22%; } .app-map i:nth-child(3) { left: 72%; top: 66%; } .app-map i:nth-child(4) { left: 38%; top: 74%; }
+    .app-map { position: relative; height: 380px; overflow: hidden; border-radius: 24px; background: radial-gradient(circle at 55% 34%, rgba(125,92,255,.42), transparent 8%), repeating-linear-gradient(35deg, transparent 0 22px, rgba(255,255,255,.035) 23px 24px), #181818; }
+    .app-map-pin { position: absolute; z-index: 1; width: 12px; height: 12px; border: 2px solid #090909; border-radius: 50%; background: var(--orange); box-shadow: 0 0 18px var(--orange); }
+    .app-map-pin::after { content: attr(data-no); position: absolute; left: 11px; top: -8px; min-width: 17px; height: 17px; display: grid; place-items: center; color: #090909; background: var(--acid); border-radius: 50%; font-size: 7px; font-style: normal; font-weight: 950; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+    .app-map-pin:nth-child(1) { left: 25%; top: 23%; } .app-map-pin:nth-child(2) { left: 64%; top: 14%; } .app-map-pin:nth-child(3) { left: 74%; top: 42%; } .app-map-pin:nth-child(4) { left: 38%; top: 49%; }
+    .app-map-events { position: absolute; left: 11px; right: 11px; bottom: 11px; z-index: 2; display: grid; gap: 6px; }
+    .app-map-event { min-height: 55px; padding: 9px 10px; display: grid; grid-template-columns: 22px 1fr auto; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.09); border-radius: 13px; background: rgba(8,8,8,.82); backdrop-filter: blur(10px); }
+    .app-map-event b { display: grid; place-items: center; width: 22px; height: 22px; color: #090909; background: var(--acid); border-radius: 50%; font-size: 8px; }
+    .app-map-event strong { display: block; font-size: 9px; }
+    .app-map-event small { display: block; margin-top: 3px; color: #747474; font-size: 7px; }
+    .app-map-event em { color: var(--orange); font-size: 8px; font-style: normal; font-weight: 900; }
     .detail-poster { height: 270px; border-radius: 22px; background: linear-gradient(0deg, #171717, transparent), url("https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=700&q=84") center / cover; }
     .detail-title { margin: 18px 0 7px; font-size: 25px; line-height: 1.1; }
     .detail-copy { color: #888; font-size: 11px; }
@@ -468,10 +475,17 @@
     .map-node::after { content: attr(data-label); position: absolute; left: 19px; top: -4px; color: #aaa; white-space: nowrap; font-size: 11px; font-weight: 800; }
     .map-node.active { background: var(--orange); box-shadow: 0 0 30px var(--orange); transform: scale(1.35); }
     .node-1 { left: 48%; top: 30%; } .node-2 { left: 66%; top: 48%; } .node-3 { left: 40%; top: 60%; } .node-4 { left: 76%; top: 70%; } .node-5 { left: 27%; top: 40%; }
-    .city-panel { position: absolute; left: 28px; right: 28px; bottom: 28px; z-index: 3; padding: 24px; display: flex; align-items: end; justify-content: space-between; gap: 20px; border: 1px solid var(--line); border-radius: 22px; background: rgba(9,9,9,.75); backdrop-filter: blur(16px); }
+    .city-panel { position: absolute; left: 28px; right: 28px; bottom: 28px; z-index: 3; padding: 22px; display: grid; grid-template-columns: minmax(150px, .55fr) 1.45fr; align-items: center; gap: 22px; border: 1px solid var(--line); border-radius: 22px; background: rgba(9,9,9,.82); backdrop-filter: blur(16px); }
     .city-panel small { color: var(--orange); font-weight: 900; }
     .city-panel h3 { margin: 8px 0 0; font-size: 28px; }
-    .city-panel p { max-width: 300px; margin: 0; color: #888; font-size: 13px; line-height: 1.6; text-align: right; }
+    .city-panel p { margin: 9px 0 0; color: #777; font-size: 11px; line-height: 1.5; }
+    .city-events { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .city-event { min-width: 0; padding: 13px; border: 1px solid rgba(255,255,255,.09); border-radius: 14px; background: rgba(255,255,255,.035); }
+    .city-event-time { color: var(--orange); font-size: 9px; font-weight: 950; letter-spacing: .05em; }
+    .city-event strong { margin-top: 8px; display: block; overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .city-event-meta { margin-top: 5px; display: flex; justify-content: space-between; gap: 7px; color: #777; font-size: 9px; }
+    .city-event-meta span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .city-event-meta b { flex: none; color: var(--acid); }
 
     .community { padding: 155px 0; }
     .community-grid { margin-top: 58px; display: grid; grid-template-columns: 1.1fr .9fr .9fr; grid-template-rows: 260px 260px; gap: 15px; }
@@ -485,8 +499,23 @@
     .community-label b { font-size: 18px; }
     .community-label span { color: var(--acid); font-size: 11px; font-weight: 900; }
 
-    .final { position: relative; min-height: 95vh; padding: 120px 0; display: grid; place-items: center; overflow: hidden; text-align: center; }
-    .final::before { content: ""; position: absolute; top: -35%; width: 65vw; height: 120%; background: linear-gradient(rgba(255,67,25,.16), transparent); clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); filter: blur(20px); }
+    .final { position: relative; min-height: 95vh; padding: 120px 0; display: grid; place-items: center; overflow: hidden; isolation: isolate; text-align: center; }
+    .final::before { content: ""; position: absolute; top: -35%; z-index: 0; width: 65vw; height: 120%; background: linear-gradient(rgba(255,67,25,.16), transparent); clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%); filter: blur(20px); }
+    .final-confetti {
+      position: absolute;
+      top: 15%;
+      right: -2%;
+      bottom: 15%;
+      left: -2%;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: .82;
+      mix-blend-mode: screen;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 90%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 90%, transparent 100%);
+    }
+    .final-confetti svg { width: 100% !important; height: 100% !important; }
     .final-content { position: relative; z-index: 2; }
     .final-title { max-width: 1100px; margin-inline: auto; }
     .final-title span { color: var(--orange); }
@@ -527,6 +556,10 @@
     }
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
     .reveal { opacity: 0; transform: translateY(28px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .final-confetti { display: none; }
+    }
 
     @media (max-width: 900px) {
       :root { --page: calc(100vw - 32px); --radius: 22px; }
@@ -591,8 +624,10 @@
       .city-list { grid-template-columns: 1fr 1fr; }
       .city-button span { display: none; }
       .map { min-height: 450px; }
-      .city-panel { left: 16px; right: 16px; bottom: 16px; flex-direction: column; align-items: start; }
-      .city-panel p { text-align: left; }
+      .city-panel { left: 16px; right: 16px; bottom: 16px; grid-template-columns: 1fr; align-items: start; }
+      .city-events { width: 100%; display: flex; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; }
+      .city-events::-webkit-scrollbar { display: none; }
+      .city-event { flex: 0 0 178px; padding: 10px 12px; }
       .community-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 280px); }
       .community-card:first-child, .community-card:nth-child(4) { grid-column: 1; grid-row: auto; }
       .download-block { flex-direction: column; }
@@ -739,7 +774,14 @@
               </div>
               <div class="app-view" data-view="1">
                 <div class="app-top"><strong>演出地图</strong><span>附近 12 场</span></div>
-                <div class="app-map"><i></i><i></i><i></i><i></i></div>
+                <div class="app-map">
+                  <i class="app-map-pin" data-no="1"></i><i class="app-map-pin" data-no="2"></i><i class="app-map-pin" data-no="3"></i><i class="app-map-pin" data-no="4"></i>
+                  <div class="app-map-events">
+                    <article class="app-map-event"><b>1</b><div><strong>午夜浪潮</strong><small>MAO Livehouse · 今晚 20:30</small></div><em>0.8 km</em></article>
+                    <article class="app-map-event"><b>2</b><div><strong>新声实验室</strong><small>东郊记忆 · 周六 19:30</small></div><em>1.6 km</em></article>
+                    <article class="app-map-event"><b>3</b><div><strong>巷尾喜剧</strong><small>过载空间 · 周日 20:00</small></div><em>2.4 km</em></article>
+                  </div>
+                </div>
               </div>
               <div class="app-view" data-view="2">
                 <div class="app-top"><strong>演出详情</strong><span>分享 ↗</span></div>
@@ -793,7 +835,14 @@
           </div>
           <div class="map" role="img" aria-label="城市演出网络概念地图">
             <i class="map-node node-1 active" data-label="成都"></i><i class="map-node node-2" data-label="上海"></i><i class="map-node node-3" data-label="北京"></i><i class="map-node node-4" data-label="广州"></i><i class="map-node node-5" data-label="武汉"></i>
-            <div class="city-panel"><div><small>NOW PLAYING</small><h3 id="city-name">成都 · 今晚</h3></div><p id="city-desc">巷子与舞台之间，今晚的声音正在发酵。</p></div>
+            <div class="city-panel">
+              <div><small>NOW PLAYING</small><h3 id="city-name">成都 · 今晚</h3><p id="city-desc">巷子与舞台之间，今晚的声音正在发酵。</p></div>
+              <div class="city-events" id="city-events" aria-live="polite">
+                <article class="city-event"><span class="city-event-time">今晚 20:30</span><strong>午夜浪潮</strong><div class="city-event-meta"><span>MAO Livehouse</span><b>¥180</b></div></article>
+                <article class="city-event"><span class="city-event-time">周六 19:30</span><strong>新声实验室</strong><div class="city-event-meta"><span>东郊记忆</span><b>¥220</b></div></article>
+                <article class="city-event"><span class="city-event-time">周日 20:00</span><strong>巷尾喜剧</strong><div class="city-event-meta"><span>过载空间</span><b>¥128</b></div></article>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -813,6 +862,7 @@
     </section>
 
     <section class="final" id="download">
+      <div class="final-confetti" id="final-confetti" aria-hidden="true"></div>
       <div class="container final-content">
         <span class="eyebrow">Ready for the live?</span>
         <h2 class="display final-title">下一场，<br><span>现场见。</span></h2>
@@ -831,11 +881,13 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.13.0/build/player/lottie.min.js"></script>
   <script>
     (() => {
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
       const hasSwiper = typeof window.Swiper !== 'undefined';
+      const hasLottie = typeof window.lottie !== 'undefined';
 
       // Native browser scrolling only.
       const hero = document.querySelector('.hero');
@@ -933,6 +985,43 @@
 
       const cityButtons = [...document.querySelectorAll('.city-button')];
       const mapNodes = [...document.querySelectorAll('.map-node')];
+      const cityEventList = document.querySelector('#city-events');
+      const cityEvents = {
+        成都: [
+          { time: '今晚 20:30', title: '午夜浪潮', venue: 'MAO Livehouse', price: '¥180' },
+          { time: '周六 19:30', title: '新声实验室', venue: '东郊记忆', price: '¥220' },
+          { time: '周日 20:00', title: '巷尾喜剧', venue: '过载空间', price: '¥128' }
+        ],
+        上海: [
+          { time: '今晚 21:00', title: '霓虹之后', venue: 'Modern Sky Lab', price: '¥198' },
+          { time: '10.24 14:00', title: '明日旷野', venue: '森林音乐公园', price: '¥399' },
+          { time: '周日 20:00', title: '潮汐电台', venue: '瓦肆 VAS', price: '¥160' }
+        ],
+        北京: [
+          { time: '今晚 20:00', title: '城市漫游', venue: '福浪 Livehouse', price: '¥160' },
+          { time: '周六 20:30', title: '北纬四十度', venue: '疆进酒 · OMNI', price: '¥220' },
+          { time: '周日 19:30', title: '胡同放映机', venue: '东市 · OMNI CLUB', price: '¥188' }
+        ],
+        广州: [
+          { time: '今晚 20:30', title: '南方失眠', venue: '声音共和', price: '¥180' },
+          { time: '周六 20:00', title: '热浪合唱团', venue: '太空间 Livehouse', price: '¥200' },
+          { time: '周日 19:30', title: '珠江夜航', venue: 'MAO Livehouse', price: '¥168' }
+        ],
+        武汉: [
+          { time: '今晚 20:00', title: '江岸声场', venue: 'VOX LIVEHOUSE', price: '¥150' },
+          { time: '周六 20:30', title: '两江回声', venue: '不晚 InTime', price: '¥180' },
+          { time: '周日 19:30', title: '光谷漫游', venue: '武汉剧院', price: '¥260' }
+        ]
+      };
+      const renderCityEvents = (city) => {
+        const cards = cityEvents[city].map((event) => {
+          const card = document.createElement('article');
+          card.className = 'city-event';
+          card.innerHTML = `<span class="city-event-time">${event.time}</span><strong>${event.title}</strong><div class="city-event-meta"><span>${event.venue}</span><b>${event.price}</b></div>`;
+          return card;
+        });
+        cityEventList.replaceChildren(...cards);
+      };
       cityButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
           cityButtons.forEach((item) => item.classList.remove('active'));
@@ -941,8 +1030,32 @@
           mapNodes[index].classList.add('active');
           document.querySelector('#city-name').textContent = `${button.dataset.city} · 今晚`;
           document.querySelector('#city-desc').textContent = button.dataset.desc;
+          renderCityEvents(button.dataset.city);
         });
       });
+
+      const confettiContainer = document.querySelector('#final-confetti');
+      if (hasLottie && confettiContainer && !reducedMotion) {
+        window.lottie.setQuality('medium');
+        const confetti = window.lottie.loadAnimation({
+          container: confettiContainer,
+          renderer: 'svg',
+          loop: true,
+          autoplay: false,
+          path: 'assets/confetti.json',
+          rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice',
+            progressiveLoad: true,
+            hideOnTransparent: true
+          }
+        });
+
+        const confettiObserver = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting) confetti.play();
+          else confetti.pause();
+        }, { threshold: .12 });
+        confettiObserver.observe(confettiContainer);
+      }
 
       if (!hasGSAP || reducedMotion) {
         document.querySelectorAll('.reveal').forEach((item) => { item.style.opacity = 1; item.style.transform = 'none'; });
